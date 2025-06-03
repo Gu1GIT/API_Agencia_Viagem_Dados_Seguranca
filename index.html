@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testador de API de Viagem</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f4f4; }
+        .container { background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); max-width: 800px; margin: auto; }
+        button { padding: 10px 15px; margin: 5px; border: none; border-radius: 5px; cursor: pointer; font-size: 1em; }
+        button.get { background-color: #4CAF50; color: white; }
+        button.post { background-color: #008CBA; color: white; }
+        button.delete { background-color: #f44336; color: white; }
+        button.patch { background-color: #ff9800; color: white; }
+        button.put { background-color: #555555; color: white; }
+        textarea { width: 100%; height: 100px; margin-top: 10px; padding: 10px; border-radius: 5px; border: 1px solid #ddd; }
+        pre {
+            width: 100%; /* Garante que ocupa a largura total disponível */
+            max-height: 400px; /* Limita a altura para evitar que ocupe demais */
+            overflow: auto; /* Adiciona scrollbars se o conteúdo for muito grande */
+            background-color: #eee;
+            padding: 10px;
+            border-radius: 5px;
+            white-space: pre-wrap; /* Permite quebras de linha longas */
+            word-wrap: break-word; /* Quebra palavras muito longas */
+            box-sizing: border-box; /* Inclui padding e borda na largura total */
+            border: 1px solid #ccc; /* Adicionado para visualização da área */
+        }
+        .input-group { margin-bottom: 10px; }
+        .input-group label { display: block; margin-bottom: 5px; font-weight: bold; }
+        .input-group input[type="text"], .input-group input[type="number"] { width: calc(100% - 22px); padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
+        .response-section {
+            margin-top: 0px; /* Ajuste para o topo */
+            margin-bottom: 20px; /* Espaço após a seção */
+            padding-top: 0px; /* Ajuste para o topo */
+            border-bottom: 1px solid #eee; /* Adicionado para separar */
+            padding-bottom: 20px;
+        }
+        h2 { color: #333; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Testador da API de Viagem</h1>
+
+        <div class="response-section">
+            <h2>Resposta da API:</h2>
+            <pre id="apiResponse">Aguardando requisição...</pre>
+        </div>
+        <p>Certifique-se de que sua aplicação Spring Boot está rodando em <code>http://localhost:8080</code> e que o CORS foi configurado para permitir a comunicação.</p>
+
+        <h2>1. Cadastrar Destino (POST)</h2>
+        <div class="input-group">
+            <label for="postName">Nome:</label>
+            <input type="text" id="postName" value="Novo Destino Teste">
+        </div>
+        <div class="input-group">
+            <label for="postLocation">Localização:</label>
+            <input type="text" id="postLocation" value="Cidade, País">
+        </div>
+        <div class="input-group">
+            <label for="postDescription">Descrição:</label>
+            <textarea id="postDescription">Uma descrição detalhada do novo destino.</textarea>
+        </div>
+        <button class="post" onclick="createDestination()">Cadastrar Destino</button>
+
+        <h2>2. Listar Destinos (GET)</h2>
+        <button class="get" onclick="getAllDestinations()">Listar Todos os Destinos</button>
+
+        <h2>3. Pesquisar Destinos (GET /search)</h2>
+        <div class="input-group">
+            <label for="searchQuery">Termo de Pesquisa (Nome ou Localização):</label>
+            <input type="text" id="searchQuery" value="Florianópolis">
+        </div>
+        <button class="get" onclick="searchDestinations()">Pesquisar Destino</button>
+
+        <h2>4. Visualizar Detalhes (GET /{id})</h2>
+        <div class="input-group">
+            <label for="getById">ID do Destino:</label>
+            <input type="number" id="getById" value="1">
+        </div>
+        <button class="get" onclick="getDestinationById()">Ver Detalhes</button>
+
+        <h2>5. Avaliar Destino (PATCH /{id}/rate)</h2>
+        <div class="input-group">
+            <label for="rateId">ID do Destino:</label>
+            <input type="number" id="rateId" value="1">
+        </div>
+        <div class="input-group">
+            <label for="rateValue">Avaliação (1-10):</label>
+            <input type="number" id="rateValue" min="1" max="10" value="8">
+        </div>
+        <button class="patch" onclick="rateDestination()">Avaliar</button>
+
+        <h2>6. Atualizar Destino (PUT /{id})</h2>
+        <div class="input-group">
+            <label for="putId">ID do Destino:</label>
+            <input type="number" id="putId" value="1">
+        </div>
+        <div class="input-group">
+            <label for="putName">Nome:</label>
+            <input type="text" id="putName" value="Nome Atualizado">
+        </div>
+        <div class="input-group">
+            <label for="putLocation">Localização:</label>
+            <input type="text" id="putLocation" value="Local Atualizado">
+        </div>
+        <div class="input-group">
+            <label for="putDescription">Descrição:</label>
+            <textarea id="putDescription">Descrição atualizada do destino.</textarea>
+        </div>
+        <button class="put" onclick="updateDestination()">Atualizar Destino</button>
+
+        <h2>7. Excluir Destino (DELETE /{id})</h2>
+        <div class="input-group">
+            <label for="deleteId">ID do Destino:</label>
+            <input type="number" id="deleteId" value="1">
+        </div>
+        <button class="delete" onclick="deleteDestination()">Excluir Destino</button>
+    </div>
+
+    <script>
+        console.log("Script carregado com sucesso!");
+        const API_BASE_URL = 'http://localhost:8080/api/destinations';
+        const apiResponseDiv = document.getElementById('apiResponse');
+
+        // Confirma que a div de resposta foi encontrada
+        console.log("Elemento apiResponseDiv:", apiResponseDiv);
+
+        async function callApi(url, method, body = null) {
+            console.log(`Chamando API: ${method} ${url}`);
+            try {
+                const options = {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                };
+                if (body) {
+                    options.body = JSON.stringify(body);
+                }
+
+                const response = await fetch(url, options);
+                console.log("Resposta da requisição (response object):", response);
+                console.log("Status da resposta:", response.status);
+                console.log("OK status da resposta:", response.ok);
+
+                let data;
+                const contentType = response.headers.get("content-type");
+                console.log("Content-Type da resposta:", contentType);
+
+                // Tratamento para quando a resposta não tem corpo JSON (ex: 204 No Content para DELETE)
+                if (response.status === 204) {
+                    data = "No Content (204) - Requisição bem-sucedida, sem conteúdo para exibir.";
+                    console.log("Resposta 204 No Content.");
+                } else if (contentType && contentType.includes("application/json")) {
+                    data = await response.json();
+                    console.log("Dados JSON recebidos:", data); // LOG CHAVE AQUI!
+                } else {
+                    data = await response.text();
+                    console.log("Dados de texto recebidos (não JSON ou erro):", data);
+                }
+
+                if (!response.ok) {
+                    // Se a resposta não for OK (status 4xx, 5xx)
+                    const errorMsg = (typeof data === 'object' && data !== null && (data.message || data.error)) ? (data.message || data.error) : data;
+                    apiResponseDiv.textContent = `Erro ${response.status}: ${errorMsg}\n\n${JSON.stringify(data, null, 2)}`;
+                    console.error('API Error:', data);
+                    return null;
+                }
+
+                // Esta é a linha que deveria exibir o JSON / dados
+                if (typeof data === 'object' && data !== null) {
+                    apiResponseDiv.textContent = JSON.stringify(data, null, 2);
+                } else {
+                    apiResponseDiv.textContent = String(data); // Se for texto simples (como a msg 204)
+                }
+
+                console.log("Conteúdo da div de resposta atualizado.");
+
+                // SCROLL PARA A SEÇÃO DE RESPOSTA APÓS ATUALIZAR
+                apiResponseDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+                return data;
+            } catch (error) {
+                apiResponseDiv.textContent = `Erro de Conexão: ${error.message}`;
+                console.error('Fetch Error:', error);
+                return null;
+            }
+        }
+
+        async function createDestination() {
+            const name = document.getElementById('postName').value;
+            const location = document.getElementById('postLocation').value;
+            const description = document.getElementById('postDescription').value;
+
+            const destination = { name, location, description };
+            await callApi(API_BASE_URL, 'POST', destination);
+        }
+
+        async function getAllDestinations() {
+            await callApi(API_BASE_URL, 'GET');
+        }
+
+        async function searchDestinations() {
+            const query = document.getElementById('searchQuery').value;
+            if (query) {
+                await callApi(`${API_BASE_URL}/search?query=${encodeURIComponent(query)}`, 'GET');
+            } else {
+                apiResponseDiv.textContent = "Por favor, insira um termo de pesquisa.";
+            }
+        }
+
+        async function getDestinationById() {
+            const id = document.getElementById('getById').value;
+            if (id) {
+                await callApi(`${API_BASE_URL}/${id}`, 'GET');
+            } else {
+                apiResponseDiv.textContent = "Por favor, insira um ID.";
+            }
+        }
+
+        async function rateDestination() {
+            const id = document.getElementById('rateId').value;
+            const rating = document.getElementById('rateValue').value;
+            if (id && rating) {
+                await callApi(`${API_BASE_URL}/${id}/rate?rating=${rating}`, 'PATCH');
+            } else {
+                apiResponseDiv.textContent = "Por favor, insira ID e avaliação.";
+            }
+        }
+
+        async function deleteDestination() {
+            const id = document.getElementById('deleteId').value;
+            if (id) {
+                const response = await callApi(`${API_BASE_URL}/${id}`, 'DELETE');
+                if (response !== null) {
+                    // O callApi já atualiza apiResponseDiv.textContent
+                }
+            } else {
+                apiResponseDiv.textContent = "Por favor, insira um ID para excluir.";
+            }
+        }
+
+        async function updateDestination() {
+            const id = document.getElementById('putId').value;
+            const name = document.getElementById('putName').value;
+            const location = document.getElementById('putLocation').value;
+            const description = document.getElementById('putDescription').value;
+
+            if (id) {
+                const destination = { id: parseInt(id), name, location, description };
+                await callApi(`${API_BASE_URL}/${id}`, 'PUT', destination);
+            } else {
+                apiResponseDiv.textContent = "Por favor, insira um ID para atualizar.";
+            }
+        }
+    </script>
+</body>
+</html>
