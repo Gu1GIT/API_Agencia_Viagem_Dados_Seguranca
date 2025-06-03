@@ -1,12 +1,21 @@
 // src/main/java/com/example/travelagencyapi/model/Destination.java
 package com.example.travelagencyapi.model;
 
+import jakarta.persistence.Entity; // Importe jakarta.persistence.Entity
+import jakarta.persistence.GeneratedValue; // Importe jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType; // Importe jakarta.persistence.GenerationType
+import jakarta.persistence.Id; // Importe jakarta.persistence.Id
+import jakarta.persistence.Table; // Importe jakarta.persistence.Table
 import java.util.Objects;
 
 /**
- * Representa um destino de viagem com suas propriedades.
+ * Representa um destino de viagem com suas propriedades, mapeado para uma tabela no banco de dados.
  */
+@Entity // Indica que esta classe é uma entidade JPA e será mapeada para uma tabela
+@Table(name = "destinations") // Opcional: define o nome da tabela no BD. Se omitido, usa o nome da classe.
 public class Destination {
+    @Id // Marca o campo 'id' como a chave primária
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Configura a geração automática de ID pelo banco de dados (ex: SERIAL no PostgreSQL)
     private Long id;
     private String name;
     private String location;
@@ -15,7 +24,7 @@ public class Destination {
     private int numberOfRatings; // Para controlar o número de avaliações recebidas
 
     /**
-     * Construtor padrão.
+     * Construtor padrão. Necessário para JPA.
      */
     public Destination() {
     }
