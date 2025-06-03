@@ -13,6 +13,7 @@
         button.delete { background-color: #f44336; color: white; }
         button.patch { background-color: #ff9800; color: white; }
         button.put { background-color: #555555; color: white; }
+        button.auth { background-color: #8A2BE2; color: white; } /* Cor para botões de autenticação */
         textarea { width: 100%; height: 100px; margin-top: 10px; padding: 10px; border-radius: 5px; border: 1px solid #ddd; }
         pre {
             width: 100%; /* Garante que ocupa a largura total disponível */
@@ -28,7 +29,7 @@
         }
         .input-group { margin-bottom: 10px; }
         .input-group label { display: block; margin-bottom: 5px; font-weight: bold; }
-        .input-group input[type="text"], .input-group input[type="number"] { width: calc(100% - 22px); padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
+        .input-group input[type="text"], .input-group input[type="number"], .input-group input[type="password"] { width: calc(100% - 22px); padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
         .response-section {
             margin-top: 0px; /* Ajuste para o topo */
             margin-bottom: 20px; /* Espaço após a seção */
@@ -43,13 +44,55 @@
     <div class="container">
         <h1>Testador da API de Viagem</h1>
 
+        <!-- SEÇÃO DE RESPOSTA MOVIDA PARA O TOPO -->
         <div class="response-section">
             <h2>Resposta da API:</h2>
             <pre id="apiResponse">Aguardando requisição...</pre>
         </div>
+        <!-- FIM DA SEÇÃO DE RESPOSTA MOVIDA -->
+
         <p>Certifique-se de que sua aplicação Spring Boot está rodando em <code>http://localhost:8080</code> e que o CORS foi configurado para permitir a comunicação.</p>
 
-        <h2>1. Cadastrar Destino (POST)</h2>
+        <h2>Autenticação e Acesso</h2>
+        <div class="input-group">
+            <label for="authUsername">Usuário (para acesso protegido):</label>
+            <input type="text" id="authUsername" value="user">
+        </div>
+        <div class="input-group">
+            <label for="authPassword">Senha (para acesso protegido):</label>
+            <input type="password" id="authPassword" value="userpass">
+        </div>
+
+        <h3>1. Fazer Login (POST /api/auth/login)</h3>
+        <div class="input-group">
+            <label for="loginUsername">Usuário para Login:</label>
+            <input type="text" id="loginUsername" value="user">
+        </div>
+        <div class="input-group">
+            <label for="loginPassword">Senha para Login:</label>
+            <input type="password" id="loginPassword" value="userpass">
+        </div>
+        <button class="auth" onclick="loginUser()">Login</button>
+        <p>Para testar o acesso a endpoints protegidos, preencha os campos "Usuário (para acesso protegido)" e "Senha (para acesso protegido)" acima.</p>
+
+        <h3>2. Registrar Usuário (POST /api/auth/register)</h3>
+        <div class="input-group">
+            <label for="regUsername">Novo Usuário:</label>
+            <input type="text" id="regUsername" value="testeuser">
+        </div>
+        <div class="input-group">
+            <label for="regPassword">Nova Senha:</label>
+            <input type="password" id="regPassword" value="testepass">
+        </div>
+        <div class="input-group">
+            <label for="regRole">Papel (ex: ROLE_USER, ROLE_ADMIN):</label>
+            <input type="text" id="regRole" value="ROLE_USER">
+        </div>
+        <button class="auth" onclick="registerUser()">Registrar</button>
+
+        <h2>Operações de Destino</h2>
+
+        <h3>3. Cadastrar Destino (POST /api/destinations)</h3>
         <div class="input-group">
             <label for="postName">Nome:</label>
             <input type="text" id="postName" value="Novo Destino Teste">
@@ -64,24 +107,24 @@
         </div>
         <button class="post" onclick="createDestination()">Cadastrar Destino</button>
 
-        <h2>2. Listar Destinos (GET)</h2>
+        <h3>4. Listar Destinos (GET /api/destinations)</h3>
         <button class="get" onclick="getAllDestinations()">Listar Todos os Destinos</button>
 
-        <h2>3. Pesquisar Destinos (GET /search)</h2>
+        <h3>5. Pesquisar Destinos (GET /api/destinations/search)</h3>
         <div class="input-group">
             <label for="searchQuery">Termo de Pesquisa (Nome ou Localização):</label>
             <input type="text" id="searchQuery" value="Florianópolis">
         </div>
         <button class="get" onclick="searchDestinations()">Pesquisar Destino</button>
 
-        <h2>4. Visualizar Detalhes (GET /{id})</h2>
+        <h3>6. Visualizar Detalhes (GET /api/destinations/{id})</h3>
         <div class="input-group">
             <label for="getById">ID do Destino:</label>
             <input type="number" id="getById" value="1">
         </div>
         <button class="get" onclick="getDestinationById()">Ver Detalhes</button>
 
-        <h2>5. Avaliar Destino (PATCH /{id}/rate)</h2>
+        <h3>7. Avaliar Destino (PATCH /api/destinations/{id}/rate)</h3>
         <div class="input-group">
             <label for="rateId">ID do Destino:</label>
             <input type="number" id="rateId" value="1">
@@ -92,7 +135,7 @@
         </div>
         <button class="patch" onclick="rateDestination()">Avaliar</button>
 
-        <h2>6. Atualizar Destino (PUT /{id})</h2>
+        <h3>8. Atualizar Destino (PUT /api/destinations/{id})</h3>
         <div class="input-group">
             <label for="putId">ID do Destino:</label>
             <input type="number" id="putId" value="1">
@@ -111,7 +154,7 @@
         </div>
         <button class="put" onclick="updateDestination()">Atualizar Destino</button>
 
-        <h2>7. Excluir Destino (DELETE /{id})</h2>
+        <h3>9. Excluir Destino (DELETE /api/destinations/{id})</h3>
         <div class="input-group">
             <label for="deleteId">ID do Destino:</label>
             <input type="number" id="deleteId" value="1">
@@ -121,14 +164,26 @@
 
     <script>
         console.log("Script carregado com sucesso!");
-        const API_BASE_URL = 'http://localhost:8080/api/destinations';
+        const API_BASE_URL = 'http://localhost:8080/api'; // Base URL para todos os endpoints
         const apiResponseDiv = document.getElementById('apiResponse');
 
-        // Confirma que a div de resposta foi encontrada
+        // Campos para credenciais de acesso protegido
+        const authUsernameInput = document.getElementById('authUsername');
+        const authPasswordInput = document.getElementById('authPassword');
+
         console.log("Elemento apiResponseDiv:", apiResponseDiv);
 
-        async function callApi(url, method, body = null) {
-            console.log(`Chamando API: ${method} ${url}`);
+        /**
+         * Função genérica para fazer chamadas à API.
+         * Inclui lógica para adicionar cabeçalhos de autenticação se credenciais forem fornecidas.
+         * @param {string} url O URL completo do endpoint.
+         * @param {string} method O método HTTP (GET, POST, PUT, DELETE, PATCH).
+         * @param {object} body O corpo da requisição (para POST, PUT, PATCH).
+         * @param {boolean} requiresAuth Indica se a requisição precisa de autenticação HTTP Basic.
+         * @returns {Promise<any>} A resposta da API em JSON ou texto, ou null em caso de erro.
+         */
+        async function callApi(url, method, body = null, requiresAuth = false) {
+            console.log(`Chamando API: ${method} ${url} (Auth: ${requiresAuth})`);
             try {
                 const options = {
                     method: method,
@@ -136,8 +191,24 @@
                         'Content-Type': 'application/json'
                     }
                 };
+
                 if (body) {
                     options.body = JSON.stringify(body);
+                }
+
+                if (requiresAuth) {
+                    const username = authUsernameInput.value;
+                    const password = authPasswordInput.value;
+                    if (!username || !password) {
+                        apiResponseDiv.textContent = "Erro: Usuário e senha são necessários para acesso protegido.";
+                        console.error("Erro: Credenciais de autenticação ausentes.");
+                        apiResponseDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        return null;
+                    }
+                    // Codifica as credenciais em Base64 para HTTP Basic
+                    const base64Credentials = btoa(`${username}:${password}`);
+                    options.headers['Authorization'] = `Basic ${base64Credentials}`;
+                    console.log("Cabeçalho de Autorização adicionado.");
                 }
 
                 const response = await fetch(url, options);
@@ -149,74 +220,101 @@
                 const contentType = response.headers.get("content-type");
                 console.log("Content-Type da resposta:", contentType);
 
-                // Tratamento para quando a resposta não tem corpo JSON (ex: 204 No Content para DELETE)
-                if (response.status === 204) {
+                if (response.status === 204) { // No Content
                     data = "No Content (204) - Requisição bem-sucedida, sem conteúdo para exibir.";
                     console.log("Resposta 204 No Content.");
                 } else if (contentType && contentType.includes("application/json")) {
                     data = await response.json();
-                    console.log("Dados JSON recebidos:", data); // LOG CHAVE AQUI!
+                    console.log("Dados JSON recebidos:", data);
                 } else {
                     data = await response.text();
                     console.log("Dados de texto recebidos (não JSON ou erro):", data);
                 }
 
                 if (!response.ok) {
-                    // Se a resposta não for OK (status 4xx, 5xx)
                     const errorMsg = (typeof data === 'object' && data !== null && (data.message || data.error)) ? (data.message || data.error) : data;
                     apiResponseDiv.textContent = `Erro ${response.status}: ${errorMsg}\n\n${JSON.stringify(data, null, 2)}`;
                     console.error('API Error:', data);
+                    apiResponseDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     return null;
                 }
 
-                // Esta é a linha que deveria exibir o JSON / dados
                 if (typeof data === 'object' && data !== null) {
                     apiResponseDiv.textContent = JSON.stringify(data, null, 2);
                 } else {
-                    apiResponseDiv.textContent = String(data); // Se for texto simples (como a msg 204)
+                    apiResponseDiv.textContent = String(data);
                 }
 
                 console.log("Conteúdo da div de resposta atualizado.");
-
-                // SCROLL PARA A SEÇÃO DE RESPOSTA APÓS ATUALIZAR
                 apiResponseDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
                 return data;
             } catch (error) {
                 apiResponseDiv.textContent = `Erro de Conexão: ${error.message}`;
                 console.error('Fetch Error:', error);
+                apiResponseDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 return null;
             }
         }
+
+        // --- Funções de Autenticação ---
+
+        async function registerUser() {
+            const username = document.getElementById('regUsername').value;
+            const password = document.getElementById('regPassword').value;
+            const role = document.getElementById('regRole').value;
+            const user = { username, password, role };
+            await callApi(`${API_BASE_URL}/auth/register`, 'POST', user);
+        }
+
+        async function loginUser() {
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            const credentials = { username, password };
+            const response = await callApi(`${API_BASE_URL}/auth/login`, 'POST', credentials);
+
+            // Se o login for bem-sucedido, preenche os campos de acesso protegido
+            if (response && response.includes("Login realizado com sucesso")) {
+                authUsernameInput.value = username;
+                authPasswordInput.value = password;
+                console.log("Campos de acesso protegido preenchidos automaticamente.");
+            }
+        }
+
+        // --- Funções de Destino (agora com opção de autenticação) ---
 
         async function createDestination() {
             const name = document.getElementById('postName').value;
             const location = document.getElementById('postLocation').value;
             const description = document.getElementById('postDescription').value;
-
             const destination = { name, location, description };
-            await callApi(API_BASE_URL, 'POST', destination);
+            // Este endpoint requer autenticação
+            await callApi(`${API_BASE_URL}/destinations`, 'POST', destination, true);
         }
 
         async function getAllDestinations() {
-            await callApi(API_BASE_URL, 'GET');
+            // Este endpoint requer autenticação
+            await callApi(`${API_BASE_URL}/destinations`, 'GET', null, true);
         }
 
         async function searchDestinations() {
             const query = document.getElementById('searchQuery').value;
             if (query) {
-                await callApi(`${API_BASE_URL}/search?query=${encodeURIComponent(query)}`, 'GET');
+                // Este endpoint requer autenticação
+                await callApi(`${API_BASE_URL}/destinations/search?query=${encodeURIComponent(query)}`, 'GET', null, true);
             } else {
                 apiResponseDiv.textContent = "Por favor, insira um termo de pesquisa.";
+                apiResponseDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         }
 
         async function getDestinationById() {
             const id = document.getElementById('getById').value;
             if (id) {
-                await callApi(`${API_BASE_URL}/${id}`, 'GET');
+                // Este endpoint requer autenticação
+                await callApi(`${API_BASE_URL}/destinations/${id}`, 'GET', null, true);
             } else {
                 apiResponseDiv.textContent = "Por favor, insira um ID.";
+                apiResponseDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         }
 
@@ -224,21 +322,11 @@
             const id = document.getElementById('rateId').value;
             const rating = document.getElementById('rateValue').value;
             if (id && rating) {
-                await callApi(`${API_BASE_URL}/${id}/rate?rating=${rating}`, 'PATCH');
+                // Este endpoint requer autenticação
+                await callApi(`${API_BASE_URL}/destinations/${id}/rate?rating=${rating}`, 'PATCH', null, true);
             } else {
                 apiResponseDiv.textContent = "Por favor, insira ID e avaliação.";
-            }
-        }
-
-        async function deleteDestination() {
-            const id = document.getElementById('deleteId').value;
-            if (id) {
-                const response = await callApi(`${API_BASE_URL}/${id}`, 'DELETE');
-                if (response !== null) {
-                    // O callApi já atualiza apiResponseDiv.textContent
-                }
-            } else {
-                apiResponseDiv.textContent = "Por favor, insira um ID para excluir.";
+                apiResponseDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         }
 
@@ -250,9 +338,25 @@
 
             if (id) {
                 const destination = { id: parseInt(id), name, location, description };
-                await callApi(`${API_BASE_URL}/${id}`, 'PUT', destination);
+                // Este endpoint requer autenticação
+                await callApi(`${API_BASE_URL}/destinations/${id}`, 'PUT', destination, true);
             } else {
                 apiResponseDiv.textContent = "Por favor, insira um ID para atualizar.";
+                apiResponseDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        async function deleteDestination() {
+            const id = document.getElementById('deleteId').value;
+            if (id) {
+                // Este endpoint requer autenticação
+                const response = await callApi(`${API_BASE_URL}/destinations/${id}`, 'DELETE', null, true);
+                if (response !== null) {
+                    // O callApi já atualiza apiResponseDiv.textContent
+                }
+            } else {
+                apiResponseDiv.textContent = "Por favor, insira um ID para excluir.";
+                apiResponseDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         }
     </script>
