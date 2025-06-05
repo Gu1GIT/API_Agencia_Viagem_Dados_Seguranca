@@ -85,7 +85,7 @@ Siga os passos abaixo para configurar e executar a aplicação em sua máquina l
 
 1.  **Clone o Repositório:**
     ```bash
-    git clone https://github.com/Gu1GIT/API_Agencia_Viagem.git
+    git clone https://github.com/Gu1GIT/API_Agencia_Viagem_Dados_Seguranca.git
     ```
   
 2.  **Navegue até a Pasta do Projeto:**
