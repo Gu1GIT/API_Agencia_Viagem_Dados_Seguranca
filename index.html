@@ -115,8 +115,10 @@
             <p>Certifique-se de que sua aplicação Spring Boot está rodando em <code>http://localhost:8080</code> e que o CORS foi configurado para permitir a comunicação.</p>
 
             <h3>1. Fazer Login (POST /api/auth/login)</h3>
-            <p> Usuário ADMIN: username: admin, password: adminpass<br>
-                Usuário USER: username: user, password: userpass<br>
+            <p><strong>Para testar o acesso a endpoints protegidos</strong>, preencha os campos "Usuário (para acesso protegido)" e "Senha (para
+                acesso protegido)" abaixo:</p>
+            <strong>Usuário ADMIN:</strong> username: <strong>admin</strong>, password: <strong>adminpass</strong><br>
+            <strong>Usuário USER:</strong> username: <strong>user</strong>, password: <strong>userpass</strong><br>
             </p>
             <div class="input-group">
                 <label for="loginUsername">Usuário para Login:</label>
@@ -127,8 +129,7 @@
                 <input type="password" id="loginPassword" value="userpass">
             </div>
             <button class="auth" onclick="loginUser()">Login</button>
-            <p>Para testar o acesso a endpoints protegidos, preencha os campos "Usuário (para acesso protegido)" e "Senha (para acesso protegido)" abaixo.</p>
-
+     
             <h3>2. Registrar Usuário (POST /api/auth/register)</h3>
             <div class="input-group">
                 <label for="regUsername">Novo Usuário:</label>
