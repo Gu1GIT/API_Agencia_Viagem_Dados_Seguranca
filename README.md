@@ -92,7 +92,7 @@ Siga os passos abaixo para configurar e executar a aplicação em sua máquina l
     ```bash
     cd API_Agencia_Viagem
     ```
-3. **Configure o Banco de Dados:**Abra o arquivo:
+3. **Configure o Banco de Dados:** Abra o arquivo:
     ```bash
     src/main/resources/application.properties.
     ```
@@ -139,18 +139,14 @@ Você pode usar o curl para testar os endpoints diretamente do seu terminal. Cer
 
   * **Registrar Novo Usuário:**
    ```bash
-  curl -X POST http://localhost:8080/api/auth/register -H "Content-Type: application/json" -d "{\"username\": \"novo_usuario\", \"password\": \"senha123\", \"role\": \"ROLE_USER\"}"
-  ```
-  
+  curl -X POST http://localhost:8080/api/auth/register -H "Content-Type: application/json" -u admin:adminpass -d "{\"username\": \"novo_usuario\", \"password\": \"senha123\", \"role\": \"ROLE_USER\"}"
+ ```
   * **Fazer Login:**
    ```bash
   curl -X POST http://localhost:8080/api/auth/login -H "Content-Type: application/json" -d "{\"username\": \"user\", \"password\": \"userpass\"}"
-  ```
-  
-  * **Listar Todos os Destinos (Requer Autenticação HTTP Basic - use -u):**
-   ```bash
-  curl -X GET http://localhost:8080/api/destinations -u user:userpass
-  ```
+
+  ```  
+
 ### 2. Via HTML Tester (Recomendado)
   Um arquivo `index.html` é fornecido na raiz do projeto para facilitar o teste interativo da API no navegador.
   
@@ -173,27 +169,28 @@ Você pode usar o `curl` para testar os endpoints diretamente do seu terminal. C
 
 * **Cadastrar Destino:**
     ```bash
-    curl -X POST http://localhost:8080/api/destinations -H "Content-Type: application/json" -d "{\"name\": \"Praia da Joaquina\", \"location\": \"Florianópolis, Brasil\", \"description\": \"Famosa pelas dunas e surf.\"}"
+  curl -X POST http://localhost:8080/api/destinations -H "Content-Type: application/json" -u user:userpass -d "{\"name\": \"Praia da Joaquina\", \"location\": \"Florianópolis, Brasil\", \"description\": \"Famosa pelas dunas e surf.\"}"
     ```
-* **Listar Todos os Destinos:**
+ * **Listar Todos os Destinos (Requer Autenticação HTTP Basic - use -u):**
     ```bash
-    curl -X GET http://localhost:8080/api/destinations
-    ```
+   curl -X GET http://localhost:8080/api/destinations -u user:userpass
+   ```
 * **Pesquisar Destinos (ex: por "Florian"):**
     ```bash
-    curl -X GET "http://localhost:8080/api/destinations/search?query=Florian"
+    curl -X GET "http://localhost:8080/api/destinations/search?query=Florian" -u user:userpass
     ```
 * **Ver Detalhes do Destino (ex: ID 1):**
     ```bash
-    curl -X GET http://localhost:8080/api/destinations/1
+    curl -X GET http://localhost:8080/api/destinations/1 -u user:userpass
     ```
 * **Avaliar Destino (ex: ID 1 com nota 9):**
     ```bash
-    curl -X PATCH "http://localhost:8080/api/destinations/1/rate?rating=9"
+    curl -X PATCH "http://localhost:8080/api/destinations/1/rate?rating=9" -u user:userpass
+
     ```
 * **Excluir Destino (ex: ID 1):**
     ```bash
-    curl -X DELETE http://localhost:8080/api/destinations/1
+    curl -X DELETE http://localhost:8080/api/destinations/1 -u user:userpass
     ```
 
 ### 2. Via HTML Tester
