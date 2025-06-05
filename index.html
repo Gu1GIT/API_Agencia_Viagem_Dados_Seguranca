@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,46 +8,110 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 0; /* Remover margem padrão do body */
+            margin: 0;
+            /* Remover margem padrão do body */
             background-color: #f4f4f4;
-            display: flex; /* Usar flexbox para o layout principal */
-            min-height: 100vh; /* Ocupar a altura total da viewport */
+            display: flex;
+            /* Usar flexbox para o layout principal */
+            min-height: 100vh;
+            /* Ocupar a altura total da viewport */
         }
+
         .main-content {
-            flex: 1; /* Ocupa o espaço restante */
+            flex: 1;
+            /* Ocupa o espaço restante */
             padding: 20px;
-            overflow-y: auto; /* Permite rolagem no conteúdo principal */
+            overflow-y: auto;
+            /* Permite rolagem no conteúdo principal */
             box-sizing: border-box;
-            background-color: #fff; /* Fundo branco para a coluna da esquerda */
-            border-right: 1px solid #ddd; /* Separador visual */
+            background-color: #fff;
+            /* Fundo branco para a coluna da esquerda */
+            border-right: 1px solid #ddd;
+            /* Separador visual */
         }
+
         .right-column-fixed {
-            width: 350px; /* Largura fixa para a coluna da direita */
+            width: 350px;
+            /* Largura fixa para a coluna da direita */
             background-color: #fff;
             padding: 20px;
-            box-shadow: -2px 0 4px rgba(0,0,0,0.1); /* Sombra para destacar */
-            position: sticky; /* Torna a coluna fixa ao rolar */
-            top: 0; /* Fixa no topo */
-            align-self: flex-start; /* Alinha ao início do flex container */
-            height: 100vh; /* Ocupa a altura total da viewport */
-            overflow-y: auto; /* Permite rolagem dentro da coluna fixa se o conteúdo for grande */
+            box-shadow: -2px 0 4px rgba(0, 0, 0, 0.1);
+            /* Sombra para destacar */
+            position: sticky;
+            /* Torna a coluna fixa ao rolar */
+            top: 0;
+            /* Fixa no topo */
+            align-self: flex-start;
+            /* Alinha ao início do flex container */
+            height: 100vh;
+            /* Ocupa a altura total da viewport */
+            overflow-y: auto;
+            /* Permite rolagem dentro da coluna fixa se o conteúdo for grande */
             box-sizing: border-box;
         }
-        .container { /* Este container agora é apenas um invólucro dentro da coluna da esquerda */
-            padding: 0; /* Remover padding pois já está no .main-content */
-            border-radius: 0; /* Remover border-radius e box-shadow */
+
+        .container {
+            /* Este container agora é apenas um invólucro dentro da coluna da esquerda */
+            padding: 0;
+            /* Remover padding pois já está no .main-content */
+            border-radius: 0;
+            /* Remover border-radius e box-shadow */
             box-shadow: none;
-            max-width: none; /* Remover max-width */
-            margin: 0; /* Remover margem */
+            max-width: none;
+            /* Remover max-width */
+            margin: 0;
+            /* Remover margem */
         }
-        button { padding: 10px 15px; margin: 5px; border: none; border-radius: 5px; cursor: pointer; font-size: 1em; }
-        button.get { background-color: #4CAF50; color: white; }
-        button.post { background-color: #008CBA; color: white; }
-        button.delete { background-color: #f44336; color: white; }
-        button.patch { background-color: #ff9800; color: white; }
-        button.put { background-color: #555555; color: white; }
-        button.auth { background-color: #8A2BE2; color: white; } /* Cor para botões de autenticação */
-        textarea { width: 100%; height: 100px; margin-top: 10px; padding: 10px; border-radius: 5px; border: 1px solid #ddd; }
+
+        button {
+            padding: 10px 15px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        button.get {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        button.post {
+            background-color: #008CBA;
+            color: white;
+        }
+
+        button.delete {
+            background-color: #f44336;
+            color: white;
+        }
+
+        button.patch {
+            background-color: #ff9800;
+            color: white;
+        }
+
+        button.put {
+            background-color: #555555;
+            color: white;
+        }
+
+        button.auth {
+            background-color: #8A2BE2;
+            color: white;
+        }
+
+        /* Cor para botões de autenticação */
+        textarea {
+            width: 100%;
+            height: 100px;
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
         pre {
             width: 100%;
             max-height: 400px;
@@ -59,9 +124,26 @@
             box-sizing: border-box;
             border: 1px solid #ccc;
         }
-        .input-group { margin-bottom: 10px; }
-        .input-group label { display: block; margin-bottom: 5px; font-weight: bold; }
-        .input-group input[type="text"], .input-group input[type="number"], .input-group input[type="password"] { width: calc(100% - 22px); padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
+
+        .input-group {
+            margin-bottom: 10px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .input-group input[type="text"],
+        .input-group input[type="number"],
+        .input-group input[type="password"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
         .response-section {
             margin-top: 0px;
             margin-bottom: 20px;
@@ -69,7 +151,10 @@
             border-bottom: 1px solid #eee;
             padding-bottom: 20px;
         }
-        h2 { color: #333; }
+
+        h2 {
+            color: #333;
+        }
 
         /* Estilos para o display de usuário logado */
         #loggedInUserDisplay {
@@ -79,7 +164,8 @@
             border: 1px solid #ddd;
             border-radius: 5px;
             background-color: #f9f9f9;
-            display: inline-block; /* Permite centralizar com text-align no pai */
+            display: inline-block;
+            /* Permite centralizar com text-align no pai */
             min-width: 150px;
             text-align: center;
             box-sizing: border-box;
@@ -88,34 +174,46 @@
         /* Estilos responsivos para telas menores */
         @media (max-width: 768px) {
             body {
-                flex-direction: column; /* Em telas menores, as colunas viram linhas */
+                flex-direction: column;
+                /* Em telas menores, as colunas viram linhas */
             }
+
             .main-content {
-                order: 2; /* Conteúdo principal abaixo da resposta */
+                order: 2;
+                /* Conteúdo principal abaixo da resposta */
                 width: 100%;
                 border-right: none;
-                border-top: 1px solid #ddd; /* Separador visual */
+                border-top: 1px solid #ddd;
+                /* Separador visual */
             }
+
             .right-column-fixed {
-                order: 1; /* Resposta no topo */
-                position: static; /* Remove a fixação */
+                order: 1;
+                /* Resposta no topo */
+                position: static;
+                /* Remove a fixação */
                 width: 100%;
-                height: auto; /* Altura automática */
+                height: auto;
+                /* Altura automática */
                 box-shadow: none;
-                border-bottom: 1px solid #ddd; /* Separador visual */
+                border-bottom: 1px solid #ddd;
+                /* Separador visual */
             }
         }
     </style>
 </head>
+
 <body>
     <div class="main-content">
         <div class="container">
             <h1>Testador da API de Viagem</h1>
 
-            <p>Certifique-se de que sua aplicação Spring Boot está rodando em <code>http://localhost:8080</code> e que o CORS foi configurado para permitir a comunicação.</p>
+            <p>Certifique-se de que sua aplicação Spring Boot está rodando em <code>http://localhost:8080</code> e que o
+                CORS foi configurado para permitir a comunicação.</p>
 
             <h3>1. Fazer Login (POST /api/auth/login)</h3>
-            <p><strong>Para testar o acesso a endpoints protegidos</strong>, preencha os campos "Usuário (para acesso protegido)" e "Senha (para
+            <p><strong>Para testar o acesso a endpoints protegidos</strong>, preencha os campos "Usuário (para acesso
+                protegido)" e "Senha (para
                 acesso protegido)" abaixo:</p>
             <strong>Usuário ADMIN:</strong> username: <strong>admin</strong>, password: <strong>adminpass</strong><br>
             <strong>Usuário USER:</strong> username: <strong>user</strong>, password: <strong>userpass</strong><br>
@@ -129,8 +227,9 @@
                 <input type="password" id="loginPassword" value="userpass">
             </div>
             <button class="auth" onclick="loginUser()">Login</button>
-     
+
             <h3>2. Registrar Usuário (POST /api/auth/register)</h3>
+            <p><strong>Exemplo: </strong> Usuário: <strong>testeuser</strong>, password: <strong>testepass</strong></p>
             <div class="input-group">
                 <label for="regUsername">Novo Usuário:</label>
                 <input type="text" id="regUsername" value="testeuser">
@@ -227,9 +326,11 @@
         <h2>Informações de Sessão</h2>
         <div style="text-align: center; margin-bottom: 20px;">
             <label>Usuário Logado:</label>
-            <div id="loggedInUserDisplay" style="font-weight: bold; font-size: 1.1em; padding: 5px; border: 1px solid #ddd; border-radius: 5px; background-color: #f9f9f9; display: inline-block; min-width: 150px; text-align: center;">Nenhum</div>
+            <div id="loggedInUserDisplay"
+                style="font-weight: bold; font-size: 1.1em; padding: 5px; border: 1px solid #ddd; border-radius: 5px; background-color: #f9f9f9; display: inline-block; min-width: 150px; text-align: center;">
+                Nenhum</div>
         </div>
-        
+
         <div class="input-group" hidden>
             <label for="authUsername">Usuário:</label>
             <input type="text" id="authUsername" value=""> <!-- Removido o valor padrão -->
@@ -344,7 +445,7 @@
             const user = { username, password, role };
             // AGORA, enviamos as credenciais do admin para este endpoint
             // O admin que está logado nos campos de "Autenticação e Acesso" será usado
-            await callApi(`${API_BASE_URL}/auth/register`, 'POST', user, true); 
+            await callApi(`${API_BASE_URL}/auth/register`, 'POST', user, true);
         }
 
         async function loginUser() {
@@ -443,4 +544,5 @@
         }
     </script>
 </body>
+
 </html>
