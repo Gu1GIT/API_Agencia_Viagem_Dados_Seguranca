@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher; // Importe para usar AntPathRequestMatcher
 
 /**
  * Classe de configuração principal para o Spring Security.
@@ -72,10 +73,16 @@ public class SecurityConfig {
         http
             .csrf(AbstractHttpConfigurer::disable) // Desabilita CSRF para APIs RESTful (geralmente não é necessário)
             .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/api/auth/**").permitAll() // PERMITE ACESSO A ENDPOINTS DE AUTENTICAÇÃO (LOGIN, REGISTRO)
-                .requestMatchers("/api/destinations/public/**").permitAll() // Exemplo: URLs públicas sem autenticação
-                .requestMatchers("/api/destinations/**").authenticated() // Requer autenticação para todos os endpoints de destinos
-                .anyRequest().authenticated() // Todas as outras requisições requerem autenticação
+                // Permite acesso público apenas ao endpoint de LOGIN
+                .requestMatchers(AntPathRequestMatcher.antMatcher("/api/auth/login")).permitAll()
+                // Restringe o endpoint de REGISTRO apenas para usuários com papel ADMIN
+                .requestMatchers(AntPathRequestMatcher.antMatcher("/api/auth/register")).hasRole("ADMIN")
+                // Permite acesso público a URLs designadas como públicas para destinos (se houver)
+                .requestMatchers(AntPathRequestMatcher.antMatcher("/api/destinations/public/**")).permitAll()
+                // Requer autenticação para todos os endpoints de destinos
+                .requestMatchers(AntPathRequestMatcher.antMatcher("/api/destinations/**")).authenticated()
+                // Todas as outras requisições requerem autenticação
+                .anyRequest().authenticated()
             )
             .httpBasic(); // Habilita autenticação HTTP Basic (para testes rápidos com Postman/cURL)
             // .formLogin(); // Opcional: para formulários de login baseados em navegador
