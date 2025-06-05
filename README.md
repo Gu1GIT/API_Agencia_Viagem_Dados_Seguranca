@@ -90,7 +90,7 @@ Siga os passos abaixo para configurar e executar a aplicação em sua máquina l
   
 2.  **Navegue até a Pasta do Projeto:**
     ```bash
-    cd API_Agencia_Viagem
+    cd Agencia_Viagem_Dados_Seguranca
     ```
 3. **Configure o Banco de Dados:** Abra o arquivo:
     ```bash
